@@ -1,7 +1,6 @@
 import Command from "../../base-command";
 import { flags } from "@oclif/command";
 import * as inquirer from "inquirer";
-import { exec } from "child_process";
 import { execShellCommand } from "../../shell";
 
 export class Git extends Command {
