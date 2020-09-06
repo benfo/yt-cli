@@ -1,7 +1,7 @@
 {
   "name": "yt-cli",
   "description": "A CLI for YouTrack",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Ben Fourie @benfo",
   "bin": {
     "yt": "./bin/run"
@@ -12,7 +12,6 @@
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^3",
     "axios": "^0.20.0",
-    "fs-extra": "^9.0.1",
     "inquirer": "^7.3.3",
     "lodash": "^4.17.20",
     "tslib": "^1"
@@ -21,7 +20,6 @@
     "@oclif/dev-cli": "^1",
     "@oclif/test": "^1",
     "@types/chai": "^4",
-    "@types/fs-extra": "^9.0.1",
     "@types/inquirer": "^7.3.1",
     "@types/mocha": "^5",
     "@types/node": "^10",

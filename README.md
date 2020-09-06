@@ -19,7 +19,7 @@ $ npm install -g yt-cli
 $ yt COMMAND
 running command...
 $ yt (-v|--version|version)
-yt-cli/0.0.0 win32-x64 node-v12.18.1
+yt-cli/0.0.1 win32-x64 node-v12.18.1
 $ yt --help [COMMAND]
 USAGE
   $ yt COMMAND
@@ -51,7 +51,7 @@ OPTIONS
   --comment=comment
 ```
 
-_See code: [src\commands\cmd.ts](https://github.com/benfo/yt-cli/blob/v0.0.0/src\commands\cmd.ts)_
+_See code: [src\commands\cmd.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\cmd.ts)_
 
 ## `yt git:start [ISSUEID]`
 
@@ -68,7 +68,7 @@ OPTIONS
   -y, --yes                      Accept defaults without prompting for input
 ```
 
-_See code: [src\commands\git\start.ts](https://github.com/benfo/yt-cli/blob/v0.0.0/src\commands\git\start.ts)_
+_See code: [src\commands\git\start.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\git\start.ts)_
 
 ## `yt help [COMMAND]`
 
@@ -94,7 +94,7 @@ USAGE
   $ yt init
 ```
 
-_See code: [src\commands\init.ts](https://github.com/benfo/yt-cli/blob/v0.0.0/src\commands\init.ts)_
+_See code: [src\commands\init.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\init.ts)_
 
 ## `yt issues`
 
@@ -118,7 +118,7 @@ OPTIONS
   --top=top               [default: 10]
 ```
 
-_See code: [src\commands\issues\index.ts](https://github.com/benfo/yt-cli/blob/v0.0.0/src\commands\issues\index.ts)_
+_See code: [src\commands\issues\index.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\issues\index.ts)_
 
 ## `yt issues:comments:add [COMMENT]`
 
@@ -134,7 +134,7 @@ OPTIONS
                   YouTrack Wiki. Changing this value does not transform the markup from one syntax to another.
 ```
 
-_See code: [src\commands\issues\comments\add.ts](https://github.com/benfo/yt-cli/blob/v0.0.0/src\commands\issues\comments\add.ts)_
+_See code: [src\commands\issues\comments\add.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\issues\comments\add.ts)_
 
 ## `yt issues:open ID`
 
@@ -146,7 +146,7 @@ ARGUMENTS
   ID  The issue ID
 ```
 
-_See code: [src\commands\issues\open.ts](https://github.com/benfo/yt-cli/blob/v0.0.0/src\commands\issues\open.ts)_
+_See code: [src\commands\issues\open.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\issues\open.ts)_
 
 ## `yt issues:query`
 
@@ -170,5 +170,5 @@ OPTIONS
   --top=top               [default: 10]
 ```
 
-_See code: [src\commands\issues\query.ts](https://github.com/benfo/yt-cli/blob/v0.0.0/src\commands\issues\query.ts)_
+_See code: [src\commands\issues\query.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\issues\query.ts)_
 <!-- commandsstop -->
