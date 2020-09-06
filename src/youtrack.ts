@@ -11,6 +11,11 @@ export default class {
     }
   }
 
+  async getIssues(params?: any) {
+    const { data: issues } = await this.get("issues", params);
+    return issues;
+  }
+
   async getIssue(idReadable: string) {
     return this.get(`issues/${idReadable}`);
   }
@@ -45,7 +50,6 @@ export default class {
   }
 
   get headers(): any {
-    cli;
     return {
       authorization: `Bearer ${this.config.token}`,
       contentType: "application/json",
