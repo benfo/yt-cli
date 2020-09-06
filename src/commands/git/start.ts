@@ -4,6 +4,10 @@ import * as inquirer from "inquirer";
 import { execShellCommand } from "../../shell";
 import cli from "cli-ux";
 import { normalize } from "../../utils";
+import simpleGit, { SimpleGit } from "simple-git";
+import { Issue } from "../../youtrack";
+
+const git = simpleGit();
 
 export class Git extends Command {
   static args = [{ name: "issueId", description: "The issue ID" }];
@@ -39,7 +43,7 @@ export class Git extends Command {
         fields: "id,idReadable,summary",
       });
 
-      const choices = issues.map((issue: any) => {
+      const choices = issues.map((issue: Issue) => {
         return {
           name: `${issue.idReadable} - ${issue.summary}`,
           value: issue,
@@ -54,11 +58,17 @@ export class Git extends Command {
           choices,
         },
       ]);
-      issueId = response.issue.idReadable;
 
-      if (!description) {
-        description = response.issue.summary;
+      description = description ?? response.issue.summary;
+      issueId = response.issue.idReadable;
+    } else {
+      const issue = await this.api.getIssue(issueId);
+      if (!issue) {
+        this.error(`Unable to find issue ${issueId}`);
       }
+
+      description = description ?? issue.summary;
+      issueId = issue.idReadable;
     }
     branchName = issueId;
 
@@ -112,11 +122,19 @@ export class Git extends Command {
 
     try {
       cli.action.start(`Creating branch ${fullBranchName}`);
-      const gitResult = await execShellCommand(
-        `git checkout -b ${fullBranchName}`
-      );
+
+      try {
+        await git.init();
+        await git.checkoutLocalBranch(fullBranchName);
+      } catch (e) {
+        this.error(e);
+      }
+
+      // const gitResult = await execShellCommand(
+      //   `git checkout -b ${fullBranchName}`
+      // );
       cli.action.stop();
-      this.log(gitResult);
+      // this.log(gitResult);
 
       cli.action.start(`Updating issue ${issueId}`);
       const issue = await this.api.getIssue(issueId);

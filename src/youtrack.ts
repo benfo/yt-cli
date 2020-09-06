@@ -34,8 +34,10 @@ export default class {
     return issues;
   }
 
-  async getIssue(idReadable: string): Promise<{ id: string }> {
-    const response = await this.get(`issues/${idReadable}`);
+  async getIssue(idReadable: string, params?: any): Promise<Issue> {
+    const response = await this.get(`issues/${idReadable}`, {
+      fields: "id,idReadable,summary",
+    });
     return response.data;
   }
 
