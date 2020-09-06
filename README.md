@@ -29,6 +29,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`yt cmd ID COMMAND`](#yt-cmd-id-command)
+* [`yt flow`](#yt-flow)
 * [`yt git:start [ISSUEID]`](#yt-gitstart-issueid)
 * [`yt help [COMMAND]`](#yt-help-command)
 * [`yt init`](#yt-init)
@@ -53,6 +54,15 @@ OPTIONS
 
 _See code: [src\commands\cmd.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\cmd.ts)_
 
+## `yt flow`
+
+```
+USAGE
+  $ yt flow
+```
+
+_See code: [src\commands\flow.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\flow.ts)_
+
 ## `yt git:start [ISSUEID]`
 
 ```
@@ -66,6 +76,7 @@ OPTIONS
   -d, --description=description  A short, actionable description
   -p, --prefix=prefix            The branch prefix to use
   -y, --yes                      Accept defaults without prompting for input
+  --no-branch                    Do not create a branch for this issue.
 ```
 
 _See code: [src\commands\git\start.ts](https://github.com/benfo/yt-cli/blob/v0.0.1/src\commands\git\start.ts)_
