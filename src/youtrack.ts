@@ -1,6 +1,24 @@
 import axios from "axios";
 import { UserConfig } from "./user-config";
 
+export interface YouTrackCommand {
+  query: string;
+  issues: [{ id: string }];
+  comment?: string;
+}
+
+export interface IssuesQuery {
+  query: string;
+  $top?: number;
+  $skip?: number;
+  fields?: string;
+}
+
+export interface Issue {
+  id: string;
+  idReadable?: string;
+  summary?: string;
+}
 export default class {
   constructor(private config: UserConfig) {
     if (config.baseUrl == null) {
@@ -11,17 +29,18 @@ export default class {
     }
   }
 
-  async getIssues(params?: any) {
+  async getIssues(params?: IssuesQuery): Promise<Issue[]> {
     const { data: issues } = await this.get("issues", params);
     return issues;
   }
 
-  async getIssue(idReadable: string) {
-    return this.get(`issues/${idReadable}`);
+  async getIssue(idReadable: string): Promise<{ id: string }> {
+    const response = await this.get(`issues/${idReadable}`);
+    return response.data;
   }
 
-  async executeCommand(data: any) {
-    return this.post("commands", data);
+  async executeCommand(data: YouTrackCommand) {
+    return await this.post("commands", data);
   }
 
   async addComment(
@@ -29,7 +48,10 @@ export default class {
     text: string,
     options?: { usesMarkdown: boolean }
   ) {
-    return this.post(`issues/${idReadable}/comments`, { text, ...options });
+    return await this.post(`issues/${idReadable}/comments`, {
+      text,
+      ...options,
+    });
   }
 
   private async post(resource: string, data: any) {

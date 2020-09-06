@@ -1,6 +1,5 @@
 import { flags } from "@oclif/command";
 import { cli } from "cli-ux";
-import axios from "axios";
 import Command from "../../base-command";
 
 export class Query extends Command {
@@ -17,19 +16,12 @@ export class Query extends Command {
   async run() {
     const { flags } = this.parse(Query);
 
-    const headers = { Authorization: `Bearer ${this.userConfig.token}` };
-    const { data: issues } = await axios.get(
-      `${this.userConfig.baseUrl}${this.resource}`,
-      {
-        headers,
-        params: {
-          $top: flags.top,
-          $skip: flags.skip,
-          fields: "id,idReadable,summary",
-          query: flags.query,
-        },
-      }
-    );
+    const issues = await this.api.getIssues({
+      $top: flags.top,
+      $skip: flags.skip,
+      fields: "id,idReadable,summary",
+      query: flags.query,
+    });
 
     cli.table(
       issues,

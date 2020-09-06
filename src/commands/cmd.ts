@@ -1,5 +1,6 @@
 import { flags } from "@oclif/command";
 import Command from "../base-command";
+import { YouTrackCommand } from "../youtrack";
 
 export class Cmd extends Command {
   static args = [
@@ -13,13 +14,13 @@ export class Cmd extends Command {
 
     let id;
     try {
-      const { data } = await this.api.getIssue(args.id);
-      id = data.id;
+      const issue = await this.api.getIssue(args.id);
+      id = issue.id;
     } catch (error) {
       this.error(error);
     }
 
-    let data = {
+    let data: YouTrackCommand = {
       query: args.command,
       issues: [{ id }],
     };

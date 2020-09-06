@@ -2,13 +2,14 @@ import Command from "../../base-command";
 import { flags } from "@oclif/command";
 import * as inquirer from "inquirer";
 import { execShellCommand } from "../../shell";
+import cli from "cli-ux";
+import { normalize } from "../../utils";
 
 export class Git extends Command {
   static args = [{ name: "issueId", description: "The issue ID" }];
   static flags = {
     prefix: flags.string({
       description: "The branch prefix to use",
-      default: "feature",
       char: "p",
     }),
     description: flags.string({
@@ -27,13 +28,14 @@ export class Git extends Command {
 
     let issueId = args.issueId;
     let description = flags.description;
-    let branchPrefix = flags.prefix;
+    let branchPrefix =
+      flags.prefix || this.userConfig["git.branchPrefix"].feature;
     let branchName: string;
 
     if (!issueId) {
       const issues = await this.api.getIssues({
-        query: "#me",
-        $top: "5",
+        query: this.userConfig["git.start"].query,
+        $top: this.userConfig["git.start"].$top,
         fields: "id,idReadable,summary",
       });
 
@@ -79,7 +81,7 @@ export class Git extends Command {
           name: "description",
           message: "Branch description",
           type: "input",
-          default: this.normalize(description),
+          default: normalize(description, 50),
         },
       ]);
 
@@ -91,7 +93,7 @@ export class Git extends Command {
     const fullBranchName = this.buildBranchName(
       branchName,
       branchPrefix,
-      this.normalize(description)
+      normalize(description, 50)
     );
 
     if (!flags.yes) {
@@ -109,22 +111,24 @@ export class Git extends Command {
     }
 
     try {
-      const result = await execShellCommand(
+      cli.action.start(`Creating branch ${fullBranchName}`);
+      const gitResult = await execShellCommand(
         `git checkout -b ${fullBranchName}`
       );
-      this.log(result);
+      cli.action.stop();
+      this.log(gitResult);
+
+      cli.action.start(`Updating issue ${issueId}`);
+      const issue = await this.api.getIssue(issueId);
+      const cmdResult = this.api.executeCommand({
+        query: this.userConfig["git.command"].query,
+        comment: this.userConfig["git.command"].comment,
+        issues: [{ id: issue.id }],
+      });
+      cli.action.stop();
     } catch (error) {
       this.error(error);
     }
-  }
-
-  private normalize(value: any) {
-    return value
-      ? value
-          .trim()
-          .toLowerCase()
-          .replace(/([\s-]+)/gi, "-")
-      : null;
   }
 
   private buildBranchName(name: string, prefix?: string, description?: string) {
