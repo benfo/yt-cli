@@ -1,12 +1,11 @@
-import Command from "../../base-command";
+import Command from "../../git-command";
 import { flags } from "@oclif/command";
 import * as inquirer from "inquirer";
 import cli from "cli-ux";
 import { normalize } from "../../utils";
-import simpleGit from "simple-git";
 import { Issue } from "../../youtrack";
 
-export class Git extends Command {
+export class Start extends Command {
   static args = [{ name: "issueId", description: "The issue ID" }];
   static flags = {
     prefix: flags.string({
@@ -28,12 +27,11 @@ export class Git extends Command {
   };
 
   async run() {
-    const { args, flags } = this.parse(Git);
+    const { args, flags } = this.parse(Start);
 
     let issueId = args.issueId;
     let description = flags.description;
-    let branchPrefix =
-      flags.prefix || this.userConfig["git.branchPrefix"].feature;
+    let branchPrefix = flags.prefix || this.commandConfig.git.branchPrefix;
     let branchName: string;
 
     const issue = await this.getIssue(issueId);
@@ -106,8 +104,8 @@ export class Git extends Command {
     }
 
     const issues = await this.api.getIssues({
-      query: this.userConfig["git.start"].query,
-      $top: this.userConfig["git.start"].$top,
+      query: this.commandConfig.git.start.query,
+      $top: this.commandConfig.git.start.$top,
       fields: "id,idReadable,summary",
     });
 
@@ -135,8 +133,8 @@ export class Git extends Command {
       cli.action.start(`Updating issue ${issueId}`);
       const issue = await this.api.getIssue(issueId);
       this.api.executeCommand({
-        query: this.userConfig["git.command"].query,
-        comment: this.userConfig["git.command"].comment,
+        query: this.commandConfig.git.command.query,
+        comment: this.commandConfig.git.command.comment,
         issues: [{ id: issue.id }],
       });
       cli.action.stop();
@@ -149,9 +147,7 @@ export class Git extends Command {
     cli.action.start(`Creating branch ${name}`);
 
     try {
-      const git = simpleGit();
-      await git.init();
-      await git.checkoutLocalBranch(name);
+      await this.git.checkoutLocalBranch(name);
     } catch (error) {
       this.error(error);
     }

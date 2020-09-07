@@ -1,8 +1,12 @@
-import Command from "../base-command";
+import Command, { GitConfig } from "../../git-command";
 import * as inquirer from "inquirer";
-import { saveLocal } from "../user-config";
+import { writeJSON } from "../../utils";
 
 export class Init extends Command {
+  async init() {
+    this.isInitCommand = true;
+    await super.init();
+  }
   async run() {
     const notEmpty = (value: any) =>
       value.length > 0 ? true : "Cannot be empty";
@@ -12,39 +16,42 @@ export class Init extends Command {
         name: "featureBranchPrefix",
         message: "Feature branch prefix",
         type: "input",
-        default: this.userConfig["git.branchPrefix"].feature,
+        default: this.commandConfig.git.branchPrefix,
         validate: notEmpty,
       },
       {
         name: "gitStartQuery",
         message: "Start feature YouTrack query",
         type: "input",
-        default: this.userConfig["git.start"].query,
+        default: this.commandConfig.git.start.query,
         validate: notEmpty,
       },
       {
         name: "gitStartQueryTop",
         message: "Number of results",
         type: "input",
-        default: this.userConfig["git.start"].$top,
+        default: this.commandConfig.git.start.$top.toString(),
         validate: notEmpty,
       },
       {
         name: "gitStartCommand",
         message: "Start feature YouTrack command",
         type: "input",
-        default: this.userConfig["git.command"].query,
+        default: this.commandConfig.git.command.query,
         validate: notEmpty,
       },
     ]);
 
-    saveLocal({
-      "git.branchPrefix": { feature: response.featureBranchPrefix },
-      "git.command": { query: response.gitStartCommand },
-      "git.start": {
-        query: response.gitStartQuery,
-        $top: response.gitStartQueryTop,
+    const commandConfig: GitConfig = {
+      git: {
+        branchPrefix: response.featureBranchPrefix,
+        command: { query: response.gitStartCommand },
+        start: {
+          query: response.gitStartQuery,
+          $top: response.gitStartQueryTop,
+        },
       },
-    });
+    };
+    writeJSON(this.configPath, commandConfig);
   }
 }

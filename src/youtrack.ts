@@ -16,7 +16,7 @@ export interface IssuesQuery {
 
 export interface Issue {
   id: string;
-  idReadable?: string;
+  idReadable: string;
   summary?: string;
 }
 export default class {
