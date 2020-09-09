@@ -13,10 +13,17 @@ export class Init extends Command {
 
     let response: any = await inquirer.prompt([
       {
-        name: "featureBranchPrefix",
-        message: "Feature branch prefix",
+        name: "developBranch",
+        message: "Develop branch",
         type: "input",
-        default: this.commandConfig.git.branchPrefix,
+        default: this.commandConfig.git.branch.develop,
+        validate: notEmpty,
+      },
+      {
+        name: "featureBranchPrefix",
+        message: "Feature branch",
+        type: "input",
+        default: this.commandConfig.git.branch.feature,
         validate: notEmpty,
       },
       {
@@ -44,7 +51,10 @@ export class Init extends Command {
 
     const commandConfig: GitConfig = {
       git: {
-        branchPrefix: response.featureBranchPrefix,
+        branch: {
+          feature: response.featureBranchPrefix,
+          develop: response.developBranch,
+        },
         command: { query: response.gitStartCommand },
         start: {
           query: response.gitStartQuery,

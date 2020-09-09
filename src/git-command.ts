@@ -6,14 +6,20 @@ import { defaults } from "lodash";
 
 export interface GitConfig {
   git: {
-    branchPrefix: string;
+    branch: {
+      develop: string;
+      feature: string;
+    };
     start: { query: string; $top: number };
     command: { query: string; comment?: string };
   };
 }
 const defaultConfig: GitConfig = {
   git: {
-    branchPrefix: "feature",
+    branch: {
+      develop: "develop",
+      feature: "feature",
+    },
     start: { query: "#me Submitted", $top: 25 },
     command: { query: "Assignee me" },
   },
@@ -46,7 +52,6 @@ export default abstract class GitCommand extends Command {
     if (await fileExists(configFilename)) {
       fileConfig = await readJSON(this.configPath);
     }
-
     this.commandConfig = defaults(fileConfig, defaultConfig);
 
     if (!this.isInitCommand && !fileConfig)

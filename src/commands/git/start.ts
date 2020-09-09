@@ -31,7 +31,7 @@ export class Start extends Command {
 
     let issueId = args.issueId;
     let description = flags.description;
-    let branchPrefix = flags.prefix || this.commandConfig.git.branchPrefix;
+    let branchPrefix = flags.prefix || this.commandConfig.git.branch.feature;
     let branchName: string;
 
     const issue = await this.getIssue(issueId);
